@@ -11,9 +11,20 @@ def make_parser():
         description="Converts a D2L grade CSV to an eLumen CLO CSV",
         epilog="For additional information contact Roger Hurwitz",
     )
-    parser.add_argument("input_fname", help="The path to the source D2L CSV to read.")
     parser.add_argument(
-        "output_fname", help="The destination path where the CLO CSV will be written."
+        "input_fname",
+        help="The path to the source D2L CSV to read.",
+    )
+    parser.add_argument(
+        "output_fname",
+        help="The destination path where the CLO CSV will be written.",
+    )
+    parser.add_argument(
+        "-t",
+        "--threshold",
+        type=int,
+        default=70,
+        help="Integer percent at or above which CLOs will meet expectations.",
     )
 
     return parser
@@ -27,13 +38,12 @@ def make_scores(line: list[str]) -> list[float]:
     return scores
 
 
-def make_meets(scores: list[float]) -> list[str]:
-    threshold = 0.7
+def make_meets(scores: list[float], threshold: float) -> list[str]:
     meets = ["1" if score >= threshold else "0" for score in scores]
     return meets
 
 
-def main(input_fname: str, output_fname: str):
+def main(input_fname: str, output_fname: str, threshold: float):
     input_path, output_path = Path(input_fname), Path(output_fname)
     output_rows: list[list[str]] = []
     clo_count = 0
@@ -45,7 +55,7 @@ def main(input_fname: str, output_fname: str):
         for input_line in csv_reader:
             student_id = input_line[0][1:]  # strip leading hash from student ID
             scores = make_scores(input_line[1:-1])  # exclude trailing hash in line
-            meets = make_meets(scores)
+            meets = make_meets(scores, threshold)
             output_row = [student_id] + meets
             output_rows.append(output_row)
 
@@ -63,4 +73,5 @@ def main(input_fname: str, output_fname: str):
 if __name__ == "__main__":
     parser = make_parser()
     args = parser.parse_args()
-    main(args.input_fname, args.output_fname)
+    print(args.threshold)
+    main(args.input_fname, args.output_fname, args.threshold / 100)
