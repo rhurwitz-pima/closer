@@ -1,3 +1,5 @@
+"""Simple utility to streamline upload of CLO assessments from D2L grading data."""
+
 import argparse
 import csv
 import re
@@ -5,6 +7,7 @@ import sys
 import textwrap
 from itertools import batched
 from pathlib import Path
+from time import perf_counter
 from typing import Iterator
 
 # Regex pattern to validate and capture D2L CSV input rows
@@ -59,11 +62,17 @@ def make_parser():
     parser.add_argument(
         "-t", "--threshold", type=int, default=70, help="Passing percent (e.g. 70)."
     )
+    parser.add_argument(
+        "-v",
+        "--verbose",
+        action="store_true",
+        help="Increase output verbosity.",
+    )
     return parser
 
 
 def yield_student_data(path: Path) -> Iterator[tuple[str, str]]:
-    """Yields valid student data or exits if a malformed student row is found."""
+    """Yields valid student data or exits if a malformed student data is found."""
     with path.open(encoding="utf-8") as f:
         for line_num, line in enumerate(f, start=1):
             if not (line := line.strip()):  # strip line and skip if empty
@@ -74,7 +83,7 @@ def yield_student_data(path: Path) -> Iterator[tuple[str, str]]:
             if match:  # no issues, fully matches valid pattern
                 yield match.group(1), match.group(2)
 
-            elif line.startswith("#"):  # data D2L row, but malformed
+            elif line.startswith("#"):  # data D2L row, but malformed (no match)
                 print(f"❌ Error: Malformed data found on line {line_num}.")
                 print(f"Content: {line}")
                 print("Expected format: #StudentId,Num,Denom,Num,Denom,...,#")
@@ -105,6 +114,7 @@ def process_scores(scores_str: str, threshold: float) -> list[str]:
 
 def main():
     """Reads command line, reads D2L csv, transforms it, writes eLumen csv."""
+    start_time = perf_counter()
     parser = make_parser()
     args = parser.parse_args()
 
@@ -119,6 +129,8 @@ def main():
     output_rows: list[list[str]] = []
 
     # 1. READ & PROCESS
+    if args.verbose:
+        print(f"✅ Reading {input_path} and processing student data.")
     for student_id, scores_str in yield_student_data(input_path):
         meets_expectations = process_scores(scores_str, threshold_decimal)
         output_rows.append([student_id] + meets_expectations)
@@ -128,7 +140,9 @@ def main():
         sys.exit(1)
 
     # 2. WRITE OUTPUT
-    clo_count = len(output_rows[0]) - 1  # excludes student_id from count
+    if args.verbose:
+        print(f"✅ Writing CLO assessment data to {output_path}.")
+    clo_count = len(output_rows[0]) - 1  # excludes student_id from CLO count
     headers = ["SID"] + [f"CLO_{i + 1}" for i in range(clo_count)]
 
     with output_path.open(mode="w", encoding="utf-8", newline="") as f:
@@ -136,7 +150,12 @@ def main():
         writer.writerow(headers)
         writer.writerows(output_rows)
 
-    print(f"✅ Success: Converted {len(output_rows)} records to {output_path}")
+    if args.verbose:
+        end_time = perf_counter()
+        print(
+            f"✅ Successfully converted {len(output_rows)} student records in "
+            f"{(end_time - start_time) * 1000:0.2f} milliseconds."
+        )
 
 
 if __name__ == "__main__":
