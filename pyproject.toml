@@ -1,7 +1,17 @@
 [project]
 name = "closer"
-version = "0.1.0"
-description = "Add your description here"
+version = "1.0.0"
+description = "Convert D2L CLO grades to eLumen CLO updates"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = []
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/closer"]
+
+[project.scripts]
+closer = "closer.main:main"

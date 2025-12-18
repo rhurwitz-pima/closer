@@ -5,6 +5,7 @@ import csv
 import re
 import sys
 import textwrap
+from importlib.metadata import PackageNotFoundError, version
 from itertools import batched
 from pathlib import Path
 from time import perf_counter
@@ -68,6 +69,11 @@ def make_parser():
         action="store_true",
         help="Increase output verbosity.",
     )
+    parser.add_argument(
+        "--version",
+        action="version",
+        version=f"closer {get_version()}",
+    )
     return parser
 
 
@@ -112,7 +118,14 @@ def process_scores(scores_str: str, threshold: float) -> list[str]:
     return results
 
 
-def main():
+def get_version() -> str:
+    try:
+        return version("closer")
+    except PackageNotFoundError:
+        return "unknown"
+
+
+def main() -> int | None:
     """Reads command line, reads D2L csv, transforms it, writes eLumen csv."""
     start_time = perf_counter()
     parser = make_parser()
