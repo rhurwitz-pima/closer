@@ -2,6 +2,7 @@ import argparse
 import csv
 import re
 import sys
+import textwrap
 from itertools import batched
 from pathlib import Path
 from typing import Iterator
@@ -33,9 +34,25 @@ D2L_PATTERN = re.compile(
 
 def make_parser():
     """Construct the argparse parser for command line inputs."""
+
+    detailed_notes = textwrap.dedent("""
+        This utility converts D2L Grade CSVs into the format required by eLumen.
+        
+        The input file must follow the standard D2L export format:
+          #StudentId, Numerator, Denominator, Numerator, Denominator...
+        
+        Logic:
+          - Rows matching the strict regex pattern are processed.
+          - Header rows and metadata are automatically skipped.
+          - Malformed student rows will trigger an error and stop execution.
+          - Scores with a denominator of 0 are treated as 0% (fails threshold).
+    """)
+
     parser = argparse.ArgumentParser(
         prog="closer",
-        description="Converts D2L CSV to eLumen with strict validation.",
+        description="Converts D2L grade data to eLumen CLO format.",
+        epilog=detailed_notes,
+        formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     parser.add_argument("input_fname", help="Path to source D2L CSV.")
     parser.add_argument("output_fname", help="Path to destination CSV.")
@@ -87,6 +104,7 @@ def process_scores(scores_str: str, threshold: float) -> list[str]:
 
 
 def main():
+    """Reads command line, reads D2L csv, transforms it, writes eLumen csv."""
     parser = make_parser()
     args = parser.parse_args()
 
@@ -110,7 +128,7 @@ def main():
         sys.exit(1)
 
     # 2. WRITE OUTPUT
-    clo_count = len(output_rows[0]) - 1
+    clo_count = len(output_rows[0]) - 1  # excludes student_id from count
     headers = ["SID"] + [f"CLO_{i + 1}" for i in range(clo_count)]
 
     with output_path.open(mode="w", encoding="utf-8", newline="") as f:
@@ -118,7 +136,7 @@ def main():
         writer.writerow(headers)
         writer.writerows(output_rows)
 
-    print(f"✅ Successfully converted {len(output_rows)} records to {output_path}")
+    print(f"✅ Success: Converted {len(output_rows)} records to {output_path}")
 
 
 if __name__ == "__main__":
