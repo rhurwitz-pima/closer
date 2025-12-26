@@ -53,7 +53,6 @@ After creating the CLO grade items, your gradebook should show **one calculated 
 
 ![D2L gradebook showing CLO calculated grade items](../images/d2l/clo-calculated-items-list.png)
 
-
 *Each CLO appears as a calculated grade item within the “Class Learning Outcomes” category. All items are hidden from students and excluded from final grade calculations.*
 
 ---
