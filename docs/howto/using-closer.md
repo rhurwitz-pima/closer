@@ -90,23 +90,6 @@ closer --verbose d2l_clo_export.csv elumen_import.csv
 
 Verbose mode is useful when validating a new workflow or diagnosing input file problems.
 
-## Input File Requirements
-
-The input CSV file must follow the standard D2L grade export format and meet the following conditions:
-
-- Contains one row per student
-- Includes only CLO calculated grade items
-- Uses numeric (points-based) grades
-- Does not include student names, email addresses, or grade schemes
-
-The expected structure is:
-
-```
-#StudentId, Numerator, Denominator, Numerator, Denominator, ...
-```
-
-Header rows and metadata produced by D2L are automatically skipped.
-
 ## Processing Logic
 
 During execution, `closer` applies the following rules:
