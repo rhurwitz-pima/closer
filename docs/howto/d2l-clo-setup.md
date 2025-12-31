@@ -101,7 +101,6 @@ After completing these steps:
 - The CSV file can be processed directly by `closer`
 
 ---
-
 ## Next Step
 
 Proceed to the usage guide:
