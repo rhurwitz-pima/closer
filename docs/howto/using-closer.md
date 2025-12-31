@@ -90,15 +90,6 @@ closer --verbose d2l_clo_export.csv elumen_import.csv
 
 Verbose mode is useful when validating a new workflow or diagnosing input file problems.
 
-## Processing Logic
-
-During execution, `closer` applies the following rules:
-
-- Only rows matching the expected student record pattern are processed
-- Header and metadata rows are ignored automatically
-- Malformed student rows cause execution to stop with an error
-- Scores with a denominator of 0 are treated as 0% and fail the threshold
-
 ## Expected Result
 
 After running `closer` successfully:
@@ -113,3 +104,9 @@ After running `closer` successfully:
 - Unexpected columns or extra fields: Ensure that only CLO grade items were selected during the D2L export.
 - Malformed rows: Verify that the D2L export completed successfully and was not manually edited.
 - All students failing a CLO unexpectedly: Check denominator values and confirm the threshold used.
+
+## Next Step
+
+Proceed to the usage guide:
+
+➡️ [Importing CLO Assessment Data into eLumen](./importing-into-elumen.md)
