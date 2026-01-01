@@ -27,7 +27,6 @@ Before starting:
 
 This category will exist solely to hold calculated CLO grade items and should not affect students’ final grades or be visible to them.
 
-
 > Note: Excluding a grade category from the final grade calculation **automatically excludes all grade items within that category** from the final grade.  
 >  
 > However, **hiding a category does not automatically hide the individual grade items** it contains. Each CLO grade item must be explicitly hidden.
