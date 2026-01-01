@@ -87,9 +87,9 @@ closer --threshold 75 d2l_export.csv elumen_import.csv
 
 For step-by-step instructions, including screenshots and validation checks, see:
 
-- docs/howto/d2l-clo-setup.md
-- docs/howto/using-closer.md
-- docs/howto/importing-into-elumen.md
+- [Configuring D2L for CLO-Based Grading](https://github.com/rhurwitz-pima/closer/blob/main/docs/howto/d2l-clo-setup.md)
+- [Using closer to Convert D2L CLO Exports](https://github.com/rhurwitz-pima/closer/blob/main/docs/howto/using-closer.md)
+- [Importing CLO Assessment Data into eLumen](https://github.com/rhurwitz-pima/closer/blob/main/docs/howto/importing-into-elumen.md)
 
 ---
 
@@ -103,4 +103,4 @@ For step-by-step instructions, including screenshots and validation checks, see:
 
 ## License
 
-See the LICENSE file for details.
+See the [LICENSE](https://github.com/rhurwitz-pima/closer/blob/main/LICENSE) file for details.
