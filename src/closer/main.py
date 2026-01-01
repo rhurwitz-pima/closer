@@ -40,7 +40,7 @@ def make_parser():
     """Construct the argparse parser for command line inputs."""
 
     detailed_notes = textwrap.dedent("""
-        This utility converts D2L Grade CSVs into the format required by eLumen.
+        This utility converts D2L CLO-based grade files into the format required by eLumen.
         
         The input file must follow the standard D2L export format:
           #StudentId, Numerator, Denominator, Numerator, Denominator...
@@ -54,8 +54,8 @@ def make_parser():
 
     parser = argparse.ArgumentParser(
         prog="closer",
-        description="Converts D2L grade data to eLumen CLO format.",
-        epilog=detailed_notes,
+        description="Converts D2L CLO-based student grading data to eLumen compatible format.",
+        # epilog=detailed_notes,
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     parser.add_argument("input_fname", help="Path to source D2L CSV.")
@@ -119,6 +119,7 @@ def process_scores(scores_str: str, threshold: float) -> list[str]:
 
 
 def get_version() -> str:
+    """Display program version based on version string in pyproject.toml"""
     try:
         return version("closer")
     except PackageNotFoundError:
