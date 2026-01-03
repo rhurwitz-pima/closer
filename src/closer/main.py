@@ -54,14 +54,18 @@ def make_parser():
 
     parser = argparse.ArgumentParser(
         prog="closer",
-        description="Converts D2L CLO-based student grading data to eLumen compatible format.",
+        description="Converts a D2L CLO grading export file into an eLumen CLO grading import file.",
         # epilog=detailed_notes,
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
-    parser.add_argument("input_fname", help="Path to source D2L CSV.")
-    parser.add_argument("output_fname", help="Path to destination CSV.")
+    parser.add_argument("input_fname", help="Path to input D2L CSV file.")
+    parser.add_argument("output_fname", help="Path to output eLumen CSV file.")
     parser.add_argument(
-        "-t", "--threshold", type=int, default=70, help="Passing percent (e.g. 70)."
+        "-t",
+        "--threshold",
+        type=int,
+        default=70,
+        help="Passing percent (defaults to 70).",
     )
     parser.add_argument(
         "-v",

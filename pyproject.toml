@@ -1,6 +1,6 @@
 [project]
 name = "closer"
-version = "1.0.0"
+version = "1.0.1"
 description = "Convert D2L CLO grades to eLumen CLO updates"
 readme = "README.md"
 requires-python = ">=3.13"
